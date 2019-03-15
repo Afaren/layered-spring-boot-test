@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import test.layer.learner.service.GreetService;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -30,9 +31,12 @@ public class GreetControllerTest {
 	@Test
 	public void should_greet_with_name() throws Exception {
 		String name = "afar";
+		String greeting = "Hello " + name;
+		given(greetService.greetWith(name)).willReturn(greeting);
+
 		this.mockMvc.perform(get("/" + name))
 					.andExpect(status().isOk())
-					.andExpect(content().string(containsString("Hello " + name)));
+					.andExpect(content().string(containsString(greeting)));
 
 		verify(greetService, times(1)).greetWith(name);
 	}
